@@ -1,0 +1,90 @@
+<html>
+<head>
+	
+</head>
+<body>
+<button id="savelocation">I was here</button>
+<button id="savedlocations">Where was I?</button>
+<button id="clearmemory">Clear my tracks</button>
+
+	<div id="mapsolution">
+		<ul id="listlocations">
+
+		</ul>
+	</div>
+
+	
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script type="text/javascript"></script>
+	<script>
+	var count = 0
+	function onLocation(position) {
+
+		console.log('Your latitude is ' + position.coords.latitude);
+		console.log('Your longitude is ' + position.coords.longitude);
+
+		$('#mapsolution').append('<img src="https://api.mapbox.com/v4/mapbox.streets/pin-s-bus+f44('+ position.coords.longitude +','+ position.coords.latitude +',16)/'+ position.coords.longitude + ',' + position.coords.latitude + ',16/600x600.png?access_token=pk.eyJ1IjoiYWJvbmhvbW1lZyIsImEiOiJjaWVtczg4cmcwMDJmdDNra2UxanBwa25tIn0.h36BYCaMTxRwRpYffkIVsA">');
+		
+		$('#savelocation').on('click', function(event) {
+        
+        event.preventDefault()
+ 		
+	 		if (window.localStorage.getItem('locations') === null) {
+	 			var location = {}
+	 			location.array = []
+	 			posicion = [count ,position.coords.latitude, position.coords.longitude, new Date().getTime()/1000]
+	 			location.array.push(posicion)
+
+	 			window.localStorage.setItem('locations',JSON.stringify(location))
+	 			console.log(window.localStorage.getItem('locations'))
+	 		} else {
+	 			var savedlocations = JSON.parse(window.localStorage.getItem('locations'));
+	 			var newlocation = [count ,position.coords.latitude, position.coords.longitude, new Date().getTime()/1000]
+	 			savedlocations.array.push(newlocation)
+	 			window.localStorage.setItem('locations',JSON.stringify(savedlocations))
+	 		};
+ 
+	 	count += 1
+    	});
+
+    	$('#clearmemory').on('click', function(event) {
+    		event.preventDefault()
+    		$('li').remove()
+    		count = 0
+    		window.localStorage.removeItem('locations')
+    	});
+
+    	
+	
+	}
+
+	$('#savedlocations').on('click', function(event) {
+	    event.preventDefault()
+	    $('li').remove()
+	    var list = JSON.parse(window.localStorage.getItem('locations'))
+		if (list === null) {
+			$('#listlocations').append('<li>Error, no positions saved. Please, save at least one position to be able to retrieve where you were.</li>')
+		} else {
+			list.array.forEach(function(location){
+	    			$('#listlocations').append('<li>'+ location[0] + ' latitude: ' + location[1] + ' longitude: ' + location[2] + ' timestamp: ' + location[3] + '</li>')
+	    		});
+		};
+	    
+	    	
+    });
+
+	function onError (error) {
+		console.error(error);
+	}
+
+	var options = {
+		enableHighAccuracy: true 
+	};
+
+	navigator.geolocation.getCurrentPosition(onLocation, onError, options);
+
+
+	</script>
+</body>
+</html>

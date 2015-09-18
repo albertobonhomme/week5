@@ -1,0 +1,104 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  </head>
+<body>
+<style>
+
+    .squaredbox {
+      text-align: center;
+      padding-top: 100px;
+      padding-bottom: 100px;
+      margin-left: 100px;
+      margin-right: 100px;
+      margin-top: 100px;
+      border: 2px solid blue;
+
+};
+
+    .hide {
+
+      visibility: hidden;
+    }
+
+  </style>
+<div class="squaredbox">
+  <p class="randomphrase">
+    
+  </p>
+  <button class="refresh">
+    Refresh
+  </button>
+  <form id="newphrase">
+    <input type="text" name="newphrase" placeholder="Add a new phrase">
+  </form>
+</div>
+<div>
+  <p id="showfrases">
+  Show Phrases
+  </p>
+</div>
+
+<div class="savedphrases hide">
+</div>
+  
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+   
+   <script>
+
+  var phrases = ['I like pie.',' Add some of your own phrases here.',' Make sure to follow all but the last phrase with a comma.'];
+    
+
+    $(document).ready(function() {
+      var randomphrase = Math.floor(Math.random() * ((phrases.length - 1) + 1));
+      $('p.randomphrase').text('' + phrases[randomphrase]);
+
+       });
+
+    $('button.refresh').on('click', function(event){
+        event.preventDefault()
+        var randomphrase = Math.floor(Math.random() * ((phrases.length - 1) + 1));
+        $('p.randomphrase').text('' + phrases[randomphrase]);
+      });
+
+    $('#newphrase').on('submit', function(event) {
+        event.preventDefault()
+        var input = $('[name="newphrase"]').val()
+        phrases.push(input);
+        this.reset();
+      });
+
+      $('p#showfrases').on('click', function(event) {
+        event.preventDefault()
+
+        if ($('p#showfrases').text() === "Show Phrases") {
+            $('p#showfrases').text("Hide Phrases")
+        }else{
+            $('p#showfrases').text("Show Phrases")
+        };
+
+        $('.savedphrases').toggleClass('hide');
+        $('.savedphrases').empty()
+
+          phrases.forEach(function(phrase){
+          if (phrase === $('p.randomphrase')) {
+            $('.savedphrases').append('<p>'+ phrase +'</p>')
+          } else {
+            $('.savedphrases').append('<p>' + phrase + '</p>')
+          };
+            });
+           
+      });
+
+
+// TO DELETE ADD A BUTTON, AND USE EVENT.TARGET TO GE THE BUTTON, AND FOR THE PARENT TO DELETE WE DO EVENT.TARGET.PARENT
+//var anchortag = $(event.target)
+//var liTag = anchortag.parent()
+//var text = liTag.parent()
+//console.log($(event.target).parent().text()
+ // can be any number
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<html>
+<body>
+
+<h1>Search Artist</h1>
+  <form id="addcharacter">
+    <input type="text" name="name" placeholder="Name">
+    <button id="submit">Submit</button>
+  </form>
+
+<div>
+  <ul class="js-character-list">
+    
+  </ul>
+</div>
+
+
+ <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+   
+   <script>
+       
+  </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Search Artist</h1>
+  <form id="searchartist">
+    <input type="text" name="Artist" placeholder="Input an Artist">
+    <button id="submit">Submit</button>
+  </form>
+
+<div class="js-artists-list">
+</div>
+
+ <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+   
+   <script>
+     
+  $('#submit').on('click', function(event) {
+      
+      event.preventDefault()
+
+      $('.js-artists-list').empty()
+      
+      var search = $('[name="Artist"]').val()
+      var request = $.get('https://api.spotify.com/v1/search?type=artist&query=' + search + "'")
+
+      function handleArtists (artists) {
+        artists.artists.items.forEach(function appendLi (ars) {
+          
+          if (ars.images.length > 0) {
+            var html = '<button class="artistbutton" id="' + ars.id +'">' + ars.name + '</button>'+'<div class="hidelist" id="'+ ars.id +'1'+'"'+'><ul></ul></div>' + '<img src="' + (ars.images[0].url) +'">';
+
+          $('.js-artists-list').append(html);
+
+          var requestalbums = $.get('https://api.spotify.com/v1/artists/'+ ars.id +'/albums');
+
+          function albumList (album) {
+            album.items.forEach(function afterLi (alb) {
+
+              var html = '<li>' + alb.name +'</li>';
+              $('div#' + ars.id+'1').append(html);
+ 
+              });
+            };
+
+          requestalbums.done(albumList);
+          };
+        });
+      };
+      
+      
+      request.done(handleArtists);
+
+     
+  });
+
+ $('div.js-artists-list').on('click', 'button.artistbutton', function(event) {
+      var idbutton = $(event.target).attr('id');
+      $('div#' + idbutton + '1').toggleClass('hidelist');
+  });
+   
+
+
+  </script>
+</body>
+</html>
